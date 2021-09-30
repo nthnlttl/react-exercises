@@ -2,33 +2,36 @@ import { useState, useEffect } from "react";
 
 function ContactForm(props) {
 
-    const [contactForm, setContactForm] = useState([])
-    const [lastName, setLastName] = useState('')
-    const [firstName, setFirstName] = useState('')
-    const [address, setAddress] = useState('')
-    const [phoneNumber, setPhoneNumber] = useState('')
+    const [contactList, setContactList] = useState([]);
+    const [last, setLast] = useState('');
+    const [first, setFirst] = useState('');
+    const [address, setAddress] = useState('');
+    const [phoneNumber, setPhoneNumber] = useState('');
 
     function handleSubmit(event) {
         event.preventDefault();
         
-        const contactForm = {
-            firstName,
-            lastName,
+        const contact = {
+            first,
+            last,
             address,
             phoneNumber,
         }
-        setContactForm([...contactForm, contactForm]);
-        setFirstName('');
-        setLastName('');
+
+        setContactList([...contactList, contact]);
+
+        setFirst('');
+        setLast('');
         setAddress('');
+        setPhoneNumber('');
     }
 
     function handleFirstNameChange(event) {
-        setFirstName(event.target.value);
+        setFirst(event.target.value);
     }
 
     function handleLastNameChange(event) {
-        setLastName(event.target.value);
+        setLast(event.target.value);
     }
 
     function handleAddressChange(event) {
@@ -39,13 +42,20 @@ function ContactForm(props) {
         setPhoneNumber(event.target.value);
     }
 
+    useEffect(() => {
+        localStorage.setItem("contactList", JSON.stringify(contactList));
+    }, [contactList]);
+
     return(
         <form onSubmit={handleSubmit}>
-            <h2>Contact Form</h2>
-            <input value={firstName} onChange={ handleFirstNameChange } placeholder="First Name"/>
-            <input value={lastName} onChange={ handleLastNameChange } placeholder="Last Name"/>
-            <input value={address} onChange={ handleAddressChange } placeholder="Address"/>
-            <input value={phoneNumber} onChange={ handlePhoneNumberChange } placeholder="Phone Number"/>
+            <h2 htmlFor="contact-input">
+                <label>Contact Form</label>
+            </h2>
+            <input value={first} name="first-name" onChange={ handleFirstNameChange } type="text" placeholder="First Name"/>
+            <input value={last} name="last-name" onChange={ handleLastNameChange } type="text" placeholder="Last Name"/>
+            <input value={address} name="address-input" onChange={ handleAddressChange } type="text" placeholder="Address"/>
+            <input value={phoneNumber} name="tel-input" onChange={ handlePhoneNumberChange } type="tel" placeholder="Phone Number"/>
+            <button type="submit">Submit</button>
         </form>
     )
 }
